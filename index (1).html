@@ -1,0 +1,382 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+<title>Beyond the Hot Flash</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Poppins:wght@400;500;600;700&family=Hind+Siliguri:wght@400;500;600;700&display=swap" rel="stylesheet">
+<style>
+:root{
+  --pink:#EC3D86; --pink-deep:#C92A6E; --blush:#FCEEF3; --petal:#F7CFDF; --rose:#F48DB5;
+  --ink:#3A3237; --muted:#8A7E86; --line:#EFE2E8; --card:#FFFFFF; --page:#FDF4F7;
+  --on-pink:#FFFFFF; --sel:#FDE6EF; --shadow:0 10px 30px rgba(201,42,110,.12);
+  color-scheme: light;
+}
+@media (prefers-color-scheme: dark){
+  :root:not([data-theme="light"]){
+    --pink:#F0569A; --pink-deep:#E0478A; --blush:#2A1D24; --petal:#5A2E43; --rose:#8E3C62;
+    --ink:#F6EAF0; --muted:#C7B3BE; --line:#4A3540; --card:#24191F; --page:#1B1318;
+    --on-pink:#FFFFFF; --sel:#3D2230; --shadow:0 10px 30px rgba(0,0,0,.35);
+    color-scheme: dark;
+  }
+}
+:root[data-theme="dark"]{
+  --pink:#F0569A; --pink-deep:#E0478A; --blush:#2A1D24; --petal:#5A2E43; --rose:#8E3C62;
+  --ink:#F6EAF0; --muted:#C7B3BE; --line:#4A3540; --card:#24191F; --page:#1B1318;
+  --on-pink:#FFFFFF; --sel:#3D2230; --shadow:0 10px 30px rgba(0,0,0,.35);
+  color-scheme: dark;
+}
+*{box-sizing:border-box}
+:root{padding-top:env(safe-area-inset-top,0px);padding-bottom:env(safe-area-inset-bottom,0px)}
+html,body{height:100%;margin:0}
+body{background:var(--page);color:var(--ink);font-family:"Poppins",system-ui,-apple-system,"Segoe UI",sans-serif;font-size:16px;line-height:1.5;-webkit-font-smoothing:antialiased}
+body[data-lang="bn"]{font-family:"Hind Siliguri","Noto Sans Bengali",system-ui,sans-serif;font-size:17px}
+body[data-lang="hi"]{font-size:16.5px}
+button{font:inherit;color:inherit}
+.app{max-width:460px;margin:0 auto;min-height:100%;position:relative;display:flex;flex-direction:column}
+:focus-visible{outline:3px solid var(--pink);outline-offset:2px;border-radius:10px}
+[tabindex="-1"]:focus,[tabindex="-1"]:focus-visible{outline:none}
+
+/* Floral blur stage */
+.stage{position:relative;overflow:hidden;background:linear-gradient(160deg,#F6C6D8 0%,#E98AB0 45%,#D9618F 100%);color:#fff}
+.stage .bloom{position:absolute;filter:blur(14px);opacity:.85;pointer-events:none}
+.stage .bloom.soft{filter:blur(30px);opacity:.7}
+.stage::after{content:"";position:absolute;inset:0;background:radial-gradient(ellipse at 50% 40%,rgba(255,255,255,.18),rgba(255,255,255,0) 60%);pointer-events:none}
+.stage > .inner{position:relative;z-index:1}
+
+/* Language screen */
+.lang-screen{min-height:100vh;min-height:100dvh;display:flex;align-items:center;justify-content:center;padding:32px 24px}
+.lang-screen .inner{width:100%;text-align:center}
+.brand{font-weight:500;font-size:1.05rem;letter-spacing:.02em;opacity:.95;margin:0 0 6px}
+.hero-title{font-weight:700;font-size:2.4rem;line-height:1.1;margin:0 0 34px;text-shadow:0 2px 18px rgba(120,20,60,.25)}
+.lang-label{margin:0 0 14px;font-size:1rem;opacity:.95}
+.lang-list{display:grid;gap:12px;max-width:320px;margin:0 auto}
+.lang-btn{display:block;width:100%;padding:16px 18px;border-radius:18px;border:1.5px solid rgba(255,255,255,.75);background:rgba(255,255,255,.22);backdrop-filter:blur(6px);-webkit-backdrop-filter:blur(6px);color:#fff;font-size:1.2rem;font-weight:600;cursor:pointer;transition:background .15s}
+.lang-btn:hover{background:rgba(255,255,255,.34)}
+.lang-btn .en{font-family:"Poppins",sans-serif}
+.lang-btn .hi{font-family:"Poppins",sans-serif}
+.lang-btn .bn{font-family:"Hind Siliguri",sans-serif}
+
+/* Welcome */
+.welcome-top{padding:40px 24px 90px;text-align:center}
+.welcome-top .hero-title{font-size:2.1rem;margin:4px 0 10px}
+.subtitle{margin:0 auto;max-width:300px;font-size:1.02rem;line-height:1.45;opacity:.96}
+textarea.othertext{min-height:90px;margin-top:12px}
+.panel{background:var(--card);margin:-60px 16px 24px;border-radius:24px;padding:24px 22px;box-shadow:var(--shadow);position:relative;z-index:2}
+.panel p{margin:0 0 14px}
+.note{font-size:.9rem;color:var(--muted);background:var(--blush);border-radius:14px;padding:12px 14px;margin:0 0 18px}
+.consent{display:flex;gap:12px;align-items:flex-start;padding:14px;border:1.5px solid var(--line);border-radius:16px;cursor:pointer;margin-bottom:18px;background:transparent;width:100%;text-align:left}
+.consent[aria-checked="true"]{border-color:var(--pink);background:var(--sel)}
+.tick{flex:none;width:26px;height:26px;border-radius:50%;border:2px solid var(--line);display:grid;place-items:center;background:var(--card)}
+.tick.square{border-radius:8px}
+[aria-checked="true"] .tick{background:var(--pink);border-color:var(--pink)}
+.tick svg{width:15px;height:15px;opacity:0}
+[aria-checked="true"] .tick svg{opacity:1}
+.link{background:none;border:none;color:var(--pink-deep);text-decoration:underline;text-underline-offset:3px;cursor:pointer;padding:6px 0;font-size:.95rem}
+:root:not([data-theme="light"]) .link{color:var(--pink)}
+
+/* Question screen */
+.qhead{background:var(--pink);color:var(--on-pink);padding:14px 18px 70px;border-radius:0 0 28px 28px;position:relative;z-index:3}
+.bar{display:flex;align-items:center;gap:10px;margin-bottom:14px}
+.iconbtn{width:40px;height:40px;border-radius:50%;border:none;background:rgba(255,255,255,.16);display:grid;place-items:center;cursor:pointer;color:#fff}
+.iconbtn:disabled{opacity:.35;cursor:default}
+.iconbtn svg{width:20px;height:20px}
+.apptitle{font-weight:600;font-size:1.15rem;margin:0}
+.progress{display:flex;align-items:center;gap:12px}
+.track{flex:1;height:8px;border-radius:99px;background:rgba(255,255,255,.35);overflow:hidden}
+.fill{height:100%;background:#fff;border-radius:99px;transition:width .3s ease}
+.count{font-weight:600;font-size:.95rem;min-width:44px;text-align:right}
+.qcard{background:var(--card);margin:-54px 16px 0;border-radius:24px;padding:22px 18px 20px;box-shadow:var(--shadow);position:relative;z-index:4;flex:1}
+.sec{font-size:.85rem;color:var(--muted);margin:0 0 6px}
+.qtext{font-size:1.55rem;line-height:1.25;font-weight:700;margin:0 0 8px;color:var(--ink)}
+body[data-lang="bn"] .qtext,body[data-lang="hi"] .qtext{line-height:1.4}
+.hint{font-size:.9rem;color:var(--muted);margin:0 0 16px}
+.opts{display:grid;gap:10px}
+.opt{display:flex;align-items:center;justify-content:space-between;gap:12px;width:100%;text-align:left;padding:14px 14px 14px 16px;border-radius:16px;border:1.5px solid var(--line);background:var(--card);cursor:pointer;font-size:1rem;line-height:1.35;transition:border-color .12s,background .12s}
+.opt:hover{border-color:var(--rose)}
+.opt[aria-checked="true"]{border-color:var(--pink);background:var(--sel);box-shadow:0 6px 18px rgba(236,61,134,.15)}
+.sub{margin-top:24px;padding-top:18px;border-top:1.5px dashed var(--line)}
+.subq{font-size:1.1rem;font-weight:600;margin:0 0 4px}
+textarea{width:100%;min-height:140px;border-radius:16px;border:1.5px solid var(--line);padding:14px;font:inherit;color:var(--ink);background:var(--card);resize:vertical}
+textarea:focus{outline:none;border-color:var(--pink)}
+.foot{position:sticky;bottom:0;padding:14px 16px calc(14px + env(safe-area-inset-bottom,0px));background:linear-gradient(to top,var(--page) 70%,rgba(0,0,0,0));z-index:5}
+.btn{display:block;width:100%;padding:16px;border-radius:18px;border:none;background:var(--pink);color:#fff;font-weight:600;font-size:1.05rem;cursor:pointer;box-shadow:0 8px 20px rgba(236,61,134,.28)}
+.btn:disabled{background:var(--petal);color:var(--muted);box-shadow:none;cursor:default}
+.btn.ghost{background:var(--card);color:var(--pink-deep);border:1.5px solid var(--pink);box-shadow:none;margin-top:10px}
+.banner{font-size:.8rem;text-align:center;padding:6px 12px;background:#FFF4D6;color:#6B5200}
+
+/* End screens */
+.end{min-height:100vh;min-height:100dvh;display:flex;align-items:center;justify-content:center;padding:28px 18px}
+.endcard{background:var(--card);color:var(--ink);border-radius:26px;padding:28px 22px 26px;text-align:center;box-shadow:0 18px 50px rgba(120,20,60,.25);max-width:380px;width:100%}
+.medal{width:118px;height:118px;margin:0 auto 4px;display:block}
+.ribbon{display:inline-block;background:var(--petal);color:var(--pink-deep);font-weight:700;font-size:.85rem;padding:5px 16px;border-radius:10px;margin:0 0 14px;border:1.5px solid var(--rose)}
+:root:not([data-theme="light"]) .ribbon{color:#fff}
+.endtitle{font-size:1.6rem;font-weight:700;line-height:1.2;margin:0 0 10px}
+.endbody{margin:0;color:var(--muted)}
+.spinner{width:46px;height:46px;border-radius:50%;border:4px solid rgba(255,255,255,.45);border-top-color:#fff;animation:spin 1s linear infinite;margin:0 auto 18px}
+@keyframes spin{to{transform:rotate(360deg)}}
+.saving{text-align:center;color:#fff;font-weight:500}
+.sr{position:absolute;width:1px;height:1px;overflow:hidden;clip:rect(0 0 0 0);white-space:nowrap}
+@media (prefers-reduced-motion: reduce){*{transition:none!important;animation:none!important}}
+@media (min-width:600px){.app{padding-top:20px}.qhead{border-radius:28px}.stage.lang-screen,.stage.end{border-radius:0}}
+</style>
+</head>
+<body data-lang="en">
+<div class="app" id="app" aria-live="polite"></div>
+<script>
+const SURVEY = {"version": "v1", "ui": {"appTitle": {"en": "Beyond the Hot Flash", "hi": "हॉट फ़्लैश से आगे", "bn": "হট ফ্ল্যাশের ওপারে"}, "subtitle": {"en": "A 4-minute study of the nights no one talks about.", "hi": "उन रातों पर 4 मिनट की एक स्टडी, जिनके बारे में कोई बात नहीं करता।", "bn": "যে রাতগুলোর কথা কেউ বলে না, তা নিয়ে ৪ মিনিটের একটি সমীক্ষা।"}, "chooseLang": {"en": "Choose your language", "hi": "अपनी भाषा चुनें", "bn": "আপনার ভাষা বেছে নিন"}, "welcomeTitle": {"en": "How are your nights, really?", "hi": "आपकी रातें सच में कैसी होती हैं?", "bn": "আপনার রাতগুলো আসলে কেমন কাটে?"}, "welcomeBody": {"en": "I'm a design student at NIFT Delhi, trying to understand how women in their 40s and 50s experience their nights. It takes 3–5 minutes. I won't ask for your name, phone number or any personal details. You can skip any question you don't want to answer.", "hi": "मैं NIFT दिल्ली की एक डिज़ाइन स्टूडेंट हूँ। मैं समझना चाहती हूँ कि 40 और 50 की उम्र की महिलाओं की रातें कैसी होती हैं। इसमें 3–5 मिनट लगेंगे। मैं आपका नाम, फ़ोन नंबर या कोई निजी जानकारी नहीं पूछूँगी। जिस सवाल का जवाब नहीं देना चाहतीं, उसे छोड़ सकती हैं।", "bn": "আমি NIFT দিল্লির একজন ডিজাইনের ছাত্রী। ৪০ আর ৫০-এর কোঠার মহিলাদের রাত কেমন কাটে, সেটা বুঝতে চাইছি। ৩–৫ মিনিট লাগবে। আপনার নাম, ফোন নম্বর বা কোনও ব্যক্তিগত তথ্য চাওয়া হবে না। যে প্রশ্নের উত্তর দিতে চান না, সেটা ছেড়ে দিতে পারেন।"}, "storageNote": {"en": "Your answers will be stored securely in Google Sheets for research. Anything you write in your own words may be translated into English for analysis.", "hi": "आपके जवाब रिसर्च के लिए Google Sheets में सुरक्षित रखे जाएँगे। अपने शब्दों में लिखे जवाबों का विश्लेषण के लिए अंग्रेज़ी में अनुवाद किया जा सकता है।", "bn": "আপনার উত্তর গবেষণার জন্য Google Sheets-এ সুরক্ষিতভাবে রাখা হবে। নিজের ভাষায় লেখা উত্তর বিশ্লেষণের জন্য ইংরেজিতে অনুবাদ করা হতে পারে।"}, "consent": {"en": "I'm happy to take part.", "hi": "मैं हिस्सा लेने के लिए तैयार हूँ।", "bn": "আমি অংশ নিতে রাজি।"}, "start": {"en": "Start", "hi": "शुरू करें", "bn": "শুরু করুন"}, "changeLang": {"en": "Change language", "hi": "भाषा बदलें", "bn": "ভাষা বদলান"}, "next": {"en": "Next", "hi": "आगे", "bn": "পরের প্রশ্ন"}, "back": {"en": "Back", "hi": "पीछे", "bn": "পিছনে"}, "submit": {"en": "Send my answers", "hi": "मेरे जवाब भेजें", "bn": "আমার উত্তর পাঠান"}, "pickOne": {"en": "Pick one", "hi": "एक चुनें", "bn": "একটি বেছে নিন"}, "pickAll": {"en": "Pick all that apply", "hi": "जितने लागू हों, सब चुनें", "bn": "যতগুলো খাটে, সব বেছে নিন"}, "optional": {"en": "Optional", "hi": "वैकल्पिक", "bn": "ইচ্ছে হলে উত্তর দিন"}, "typeHere": {"en": "Tell us in a few words (optional)", "hi": "कुछ शब्दों में बताइए (वैकल्पिक)", "bn": "কয়েকটা কথায় লিখুন (ইচ্ছে হলে)"}, "saving": {"en": "Saving your answers…", "hi": "आपके जवाब सेव हो रहे हैं…", "bn": "আপনার উত্তর সেভ হচ্ছে…"}, "errorTitle": {"en": "Your answers were not saved", "hi": "आपके जवाब सेव नहीं हुए", "bn": "আপনার উত্তর সেভ হয়নি"}, "errorBody": {"en": "Check your internet connection and try again. Your answers are still here.", "hi": "अपना इंटरनेट कनेक्शन देखें और फिर से कोशिश करें। आपके जवाब अभी भी यहीं हैं।", "bn": "ইন্টারনেট সংযোগ দেখে আবার চেষ্টা করুন। আপনার উত্তরগুলো এখনও এখানেই আছে।"}, "retry": {"en": "Try again", "hi": "फिर से कोशिश करें", "bn": "আবার চেষ্টা করুন"}, "thanksRibbon": {"en": "Thank you", "hi": "धन्यवाद", "bn": "ধন্যবাদ"}, "thanksTitle": {"en": "Thank you so much!", "hi": "बहुत-बहुत धन्यवाद!", "bn": "অনেক ধন্যবাদ!"}, "thanksBody": {"en": "Many women have restless nights at this stage of life. You're not alone. Your answers will help design more comfortable things for women like you.", "hi": "इस उम्र में कई महिलाओं की रातें बेचैनी भरी होती हैं। आप अकेली नहीं हैं। आपके जवाब आप जैसी महिलाओं के लिए ज़्यादा आरामदायक चीज़ें बनाने में मदद करेंगे।", "bn": "এই বয়সে অনেক মহিলারই রাত অস্থির কাটে। আপনি একা নন। আপনার উত্তর আপনার মতো মহিলাদের জন্য আরও আরামদায়ক জিনিস তৈরি করতে সাহায্য করবে।"}, "u40Title": {"en": "Thank you!", "hi": "धन्यवाद!", "bn": "ধন্যবাদ!"}, "u40Body": {"en": "This survey is for women aged 40 and above, but we're grateful you stopped by.", "hi": "यह सर्वे 40 साल या उससे ज़्यादा उम्र की महिलाओं के लिए है, फिर भी आपके समय के लिए शुक्रिया।", "bn": "এই সমীক্ষাটি ৪০ বছর বা তার বেশি বয়সী মহিলাদের জন্য, তবু সময় দেওয়ার জন্য অনেক ধন্যবাদ।"}, "previewNote": {"en": "Preview only: answers are not saved here.", "hi": "सिर्फ़ प्रीव्यू: यहाँ जवाब सेव नहीं होते।", "bn": "শুধু প্রিভিউ: এখানে উত্তর সেভ হয় না।"}, "testNote": {"en": "Test mode: this response is marked TEST.", "hi": "टेस्ट मोड: यह जवाब TEST के रूप में दर्ज होगा।", "bn": "টেস্ট মোড: এই উত্তরটি TEST হিসেবে চিহ্নিত হবে।"}, "secAbout": {"en": "About you", "hi": "आपके बारे में", "bn": "আপনার সম্পর্কে"}, "secNights": {"en": "Your nights", "hi": "आपकी रातें", "bn": "আপনার রাত"}, "secCoping": {"en": "What you do", "hi": "आप क्या करती हैं", "bn": "আপনি কী করেন"}, "secWear": {"en": "What you wear", "hi": "आप क्या पहनती हैं", "bn": "আপনি কী পরেন"}, "secLast": {"en": "In your words", "hi": "आपके शब्दों में", "bn": "আপনার কথায়"}}, "questions": [{"id": "q1_age", "type": "single", "required": true, "sec": "secAbout", "text": {"en": "How old are you?", "hi": "आपकी उम्र क्या है?", "bn": "আপনার বয়স কত?"}, "options": [{"code": "u40", "en": "Under 40", "hi": "40 से कम", "bn": "৪০-এর কম"}, {"code": "40_44", "en": "40–44", "hi": "40–44", "bn": "৪০–৪৪"}, {"code": "45_49", "en": "45–49", "hi": "45–49", "bn": "৪৫–৪৯"}, {"code": "50_55", "en": "50–55", "hi": "50–55", "bn": "৫০–৫৫"}, {"code": "56_60", "en": "56–60", "hi": "56–60", "bn": "৫৬–৬০"}, {"code": "o60", "en": "Over 60", "hi": "60 से ज़्यादा", "bn": "৬০-এর বেশি"}]}, {"id": "q2_periods", "type": "single", "required": true, "sec": "secAbout", "text": {"en": "How are your periods now?", "hi": "अभी आपके पीरियड्स कैसे हैं?", "bn": "এখন আপনার পিরিয়ড কেমন হচ্ছে?"}, "options": [{"code": "regular", "en": "Regular", "hi": "नियमित", "bn": "নিয়মিত হচ্ছে"}, {"code": "irregular", "en": "Irregular", "hi": "अनियमित", "bn": "অনিয়মিত হচ্ছে"}, {"code": "stopped_lt1", "en": "Stopped less than a year ago", "hi": "एक साल से कम समय पहले बंद हुए", "bn": "এক বছরের কম সময় আগে বন্ধ হয়েছে"}, {"code": "stopped_gt1", "en": "Stopped more than a year ago", "hi": "एक साल से ज़्यादा पहले बंद हुए", "bn": "এক বছরের বেশি আগে বন্ধ হয়েছে"}, {"code": "surgical", "en": "Stopped after an operation", "hi": "ऑपरेशन के बाद बंद हुए", "bn": "অপারেশনের পরে বন্ধ হয়েছে"}, {"code": "not_sure", "en": "Not sure", "hi": "पता नहीं", "bn": "ঠিক জানি না"}, {"code": "pns", "en": "Prefer not to say", "hi": "बताना नहीं चाहती", "bn": "বলতে চাই না"}]}, {"id": "q3_experiences", "type": "multi", "required": true, "sec": "secAbout", "exclusive": ["none"], "text": {"en": "In the last few months, have you had any of these?", "hi": "पिछले कुछ महीनों में इनमें से कुछ हुआ है?", "bn": "গত কয়েক মাসে এগুলোর মধ্যে কোনওটা হয়েছে?"}, "options": [{"code": "hot_sweats", "en": "Sudden heat or night sweats", "hi": "अचानक गर्मी लगना या रात में पसीना", "bn": "হঠাৎ গরম লাগা বা রাতে ঘাম"}, {"code": "poor_sleep", "en": "Poor sleep", "hi": "नींद ठीक से न आना", "bn": "ঘুম ভালো না হওয়া"}, {"code": "mood", "en": "Mood changes", "hi": "मूड बदलना", "bn": "মেজাজ বদলানো"}, {"code": "tired", "en": "Tiredness", "hi": "थकान", "bn": "ক্লান্তি"}, {"code": "joint", "en": "Joint pain", "hi": "जोड़ों में दर्द", "bn": "গাঁটে ব্যথা"}, {"code": "skin_hair", "en": "Dry skin or hair fall", "hi": "रूखी त्वचा या बाल झड़ना", "bn": "ত্বক শুকনো হওয়া বা চুল পড়া"}, {"code": "weight", "en": "Weight changes", "hi": "वज़न में बदलाव", "bn": "ওজন বাড়া-কমা"}, {"code": "other", "en": "Something else", "hi": "कुछ और", "bn": "অন্য কিছু"}, {"code": "none", "en": "None of these", "hi": "इनमें से कुछ नहीं", "bn": "এগুলোর কোনওটাই না"}]}, {"id": "q4_frequency", "type": "single", "required": true, "sec": "secNights", "text": {"en": "How often do you wake up at night feeling hot or sweaty?", "hi": "रात में गर्मी या पसीने से आपकी नींद कितनी बार खुलती है?", "bn": "রাতে গরম লেগে বা ঘেমে কত ঘন ঘন ঘুম ভেঙে যায়?"}, "options": [{"code": "never", "en": "Never", "hi": "कभी नहीं", "bn": "কখনও না"}, {"code": "rarely", "en": "Rarely", "hi": "बहुत कम", "bn": "খুব কম"}, {"code": "weekly", "en": "About once a week", "hi": "हफ़्ते में लगभग एक बार", "bn": "সপ্তাহে প্রায় একবার"}, {"code": "few_week", "en": "A few nights a week", "hi": "हफ़्ते में कुछ रातें", "bn": "সপ্তাহে কয়েক রাত"}, {"code": "nightly", "en": "Almost every night", "hi": "लगभग हर रात", "bn": "প্রায় প্রতি রাতে"}]}, {"id": "q5_what_happens", "type": "multi", "required": true, "sec": "secNights", "text": {"en": "When that happens, what happens?", "hi": "जब ऐसा होता है, तो क्या-क्या होता है?", "bn": "তখন কী কী হয়?"}, "options": [{"code": "heat", "en": "I suddenly feel very hot", "hi": "अचानक बहुत गर्मी लगती है", "bn": "হঠাৎ খুব গরম লাগে"}, {"code": "sweat", "en": "I sweat", "hi": "पसीना आता है", "bn": "ঘাম হয়"}, {"code": "wet_cloth", "en": "My clothes or sheets get wet", "hi": "कपड़े या चादर गीले हो जाते हैं", "bn": "জামাকাপড় বা চাদর ভিজে যায়"}, {"code": "chill", "en": "I feel cold or shiver afterwards", "hi": "बाद में ठंड लगती है या कंपकंपी होती है", "bn": "পরে ঠান্ডা লাগে বা কাঁপুনি হয়"}, {"code": "no_sleep", "en": "I can't fall asleep again", "hi": "दोबारा नींद नहीं आती", "bn": "আবার ঘুম আসতে চায় না"}, {"code": "partner", "en": "The person next to me wakes up", "hi": "साथ सोने वाले की नींद खुल जाती है", "bn": "পাশের মানুষের ঘুম ভেঙে যায়"}, {"code": "other", "en": "Something else", "hi": "कुछ और", "bn": "অন্য কিছু"}]}, {"id": "q6_most_trouble", "type": "single", "required": true, "sec": "secNights", "derivedFrom": "q5_what_happens", "text": {"en": "Which of these troubles you the most?", "hi": "इनमें से सबसे ज़्यादा परेशानी किससे होती है?", "bn": "এগুলোর মধ্যে কোনটায় সবচেয়ে বেশি অসুবিধা হয়?"}, "options": [{"code": "nothing", "en": "Nothing troubles me much", "hi": "ज़्यादा परेशानी नहीं होती", "bn": "তেমন অসুবিধা হয় না"}]}, {"id": "q7_actions", "type": "multi", "required": true, "sec": "secCoping", "exclusive": ["nothing"], "text": {"en": "What do you usually do then?", "hi": "तब आप आमतौर पर क्या करती हैं?", "bn": "তখন আপনি সাধারণত কী করেন?"}, "options": [{"code": "uncover", "en": "Push the sheet off", "hi": "चादर हटा देती हूँ", "bn": "চাদর সরিয়ে দিই"}, {"code": "cooling", "en": "Turn on the fan, cooler or AC", "hi": "पंखा, कूलर या AC चलाती हूँ", "bn": "পাখা, কুলার বা AC চালাই"}, {"code": "wipe", "en": "Wipe sweat with a cloth", "hi": "कपड़े से पसीना पोंछती हूँ", "bn": "কাপড় দিয়ে ঘাম মুছি"}, {"code": "change_clothes", "en": "Change clothes", "hi": "कपड़े बदलती हूँ", "bn": "জামা বদলাই"}, {"code": "change_bedding", "en": "Change the sheet or pillow cover", "hi": "चादर या तकिये का कवर बदलती हूँ", "bn": "চাদর বা বালিশের ওয়াড় বদলাই"}, {"code": "get_up", "en": "Get up", "hi": "उठ जाती हूँ", "bn": "উঠে পড়ি"}, {"code": "water", "en": "Drink water", "hi": "पानी पीती हूँ", "bn": "জল খাই"}, {"code": "other", "en": "Something else", "hi": "कुछ और", "bn": "অন্য কিছু"}, {"code": "nothing", "en": "Nothing", "hi": "कुछ नहीं", "bn": "কিছুই করি না"}]}, {"id": "q8_helps", "type": "single", "required": true, "sec": "secCoping", "text": {"en": "How much does that help?", "hi": "इससे कितना आराम मिलता है?", "bn": "এতে কতটা আরাম হয়?"}, "options": [{"code": "a_lot", "en": "A lot", "hi": "बहुत", "bn": "অনেকটা"}, {"code": "a_little", "en": "A little", "hi": "थोड़ा", "bn": "কিছুটা"}, {"code": "hardly", "en": "Hardly at all", "hi": "लगभग नहीं", "bn": "প্রায় হয় না"}, {"code": "cant_say", "en": "Can't say", "hi": "कह नहीं सकती", "bn": "বলতে পারব না"}]}, {"id": "q9a_sleepwear", "type": "single", "required": true, "sec": "secWear", "pairWith": "q9b_fabric", "text": {"en": "What do you usually wear to sleep?", "hi": "सोते समय आप आमतौर पर क्या पहनती हैं?", "bn": "ঘুমোনোর সময় সাধারণত কী পরেন?"}, "options": [{"code": "nighty", "en": "Nighty", "hi": "नाइटी", "bn": "নাইটি"}, {"code": "sari", "en": "Sari", "hi": "साड़ी", "bn": "শাড়ি"}, {"code": "salwar", "en": "Salwar-kurta", "hi": "सलवार-कुर्ता", "bn": "সালোয়ার-কুর্তা"}, {"code": "tshirt", "en": "T-shirt and pyjama", "hi": "टी-शर्ट और पायजामा", "bn": "টি-শার্ট আর পাজামা"}, {"code": "other", "en": "Something else", "hi": "कुछ और", "bn": "অন্য কিছু"}]}, {"id": "q9b_fabric", "type": "single", "required": false, "sec": "secWear", "sub": true, "text": {"en": "What fabric is it usually?", "hi": "वह आमतौर पर किस कपड़े का होता है?", "bn": "সেটা সাধারণত কোন কাপড়ের?"}, "options": [{"code": "cotton", "en": "Cotton", "hi": "सूती", "bn": "সুতির"}, {"code": "synthetic", "en": "Synthetic", "hi": "सिंथेटिक", "bn": "সিন্থেটিক"}, {"code": "mixed", "en": "Mixed", "hi": "मिला-जुला", "bn": "মেশানো"}, {"code": "dk", "en": "Don't know", "hi": "पता नहीं", "bn": "জানি না"}]}, {"id": "q10_cloth_issues", "type": "multi", "required": true, "sec": "secWear", "exclusive": ["none"], "text": {"en": "Does what you wear or sleep on ever do any of these?", "hi": "जो आप पहनती हैं या जिस पर सोती हैं, क्या उसमें कभी ऐसा होता है?", "bn": "রাতে যা পরেন বা যার ওপর শোন, তাতে কি কখনও এগুলো হয়?"}, "options": [{"code": "feels_hot", "en": "Feels hot", "hi": "गर्म लगता है", "bn": "গরম লাগে"}, {"code": "stays_wet", "en": "Stays wet for a long time", "hi": "देर तक गीला रहता है", "bn": "অনেকক্ষণ ভিজে থাকে"}, {"code": "sticky", "en": "Feels sticky", "hi": "चिपचिपा लगता है", "bn": "গায়ে চিটচিটে লাগে"}, {"code": "smell", "en": "Smells even after washing", "hi": "धोने के बाद भी बदबू आती है", "bn": "কাচার পরেও গন্ধ থাকে"}, {"code": "slow_dry", "en": "Takes long to dry in the monsoon", "hi": "बरसात में देर से सूखता है", "bn": "বর্ষায় শুকোতে দেরি হয়"}, {"code": "other", "en": "Something else", "hi": "कुछ और", "bn": "অন্য কিছু"}, {"code": "none", "en": "None of these", "hi": "इनमें से कुछ नहीं", "bn": "এগুলোর কোনওটাই না"}]}, {"id": "q11_cooling", "type": "multi", "required": true, "sec": "secWear", "exclusive": ["nothing"], "text": {"en": "What do you use to stay cool at night?", "hi": "रात में ठंडक के लिए आप क्या इस्तेमाल करती हैं?", "bn": "রাতে ঠান্ডা থাকতে কী ব্যবহার করেন?"}, "options": [{"code": "fan", "en": "Fan", "hi": "पंखा", "bn": "পাখা"}, {"code": "cooler", "en": "Cooler", "hi": "कूलर", "bn": "কুলার"}, {"code": "ac_all", "en": "AC all night", "hi": "पूरी रात AC", "bn": "সারা রাত AC"}, {"code": "ac_part", "en": "AC for part of the night", "hi": "रात के कुछ समय AC", "bn": "রাতের কিছুটা সময় AC"}, {"code": "nothing", "en": "Nothing", "hi": "कुछ नहीं", "bn": "কিছুই না"}]}, {"id": "q12_change", "type": "single", "required": true, "sec": "secNights", "otherText": "q12_other", "text": {"en": "If you could change one thing about your nights, what would it be?", "hi": "अगर आप अपनी रातों की एक चीज़ बदल सकतीं, तो वह क्या होती?", "bn": "আপনার রাতের একটা জিনিস বদলাতে পারলে, কী বদলাতেন?"}, "options": [{"code": "no_hot_wake", "en": "Not waking up hot", "hi": "गर्मी से नींद न खुले", "bn": "গরমে ঘুম না ভাঙুক"}, {"code": "no_wet", "en": "Not feeling wet or sticky", "hi": "गीलापन या चिपचिपापन न हो", "bn": "ভেজা বা চিটচিটে ভাব না থাকুক"}, {"code": "no_chill", "en": "Not feeling cold afterwards", "hi": "बाद में ठंड न लगे", "bn": "পরে ঠান্ডা না লাগুক"}, {"code": "sleep_again", "en": "Falling back asleep quickly", "hi": "जल्दी दोबारा नींद आ जाए", "bn": "তাড়াতাড়ি আবার ঘুম আসুক"}, {"code": "no_disturb", "en": "Not disturbing anyone", "hi": "किसी और की नींद न खुले", "bn": "অন্য কারও ঘুম না ভাঙুক"}, {"code": "less_laundry", "en": "Less washing and drying", "hi": "कम धोना-सुखाना पड़े", "bn": "কম কাচাকুচি আর শুকোনো"}, {"code": "fine", "en": "Nothing, my nights are fine", "hi": "कुछ नहीं, मेरी रातें ठीक हैं", "bn": "কিছু না, আমার রাত ভালোই কাটে"}, {"code": "other", "en": "Something else", "hi": "कुछ और", "bn": "অন্য কিছু"}]}]};
+const TEST_MODE = new URLSearchParams(location.search).get("test") === "1";
+const ENDPOINT = "https://script.google.com/macros/s/AKfycbzjO9AZqxSjIM1U1J8Ix5wwSAsKVd36r26o5Ra22LnBF2ALPQ8g2gNhrNX9zcTFkvfa/exec";
+(function(){
+  "use strict";
+  const UI = SURVEY.ui, QS = SURVEY.questions, Q = {};
+  QS.forEach(q => Q[q.id] = q);
+  const IN_APPS_SCRIPT = !!ENDPOINT; // standalone page: answers are posted to the Apps Script web app
+  const STEPS = ["q1_age","q2_periods","q3_experiences","q4_frequency","q5_what_happens","q6_most_trouble","q7_actions","q8_helps","q9","q10_cloth_issues","q11_cooling","q12_change"];
+  const state = { lang:null, screen:"lang", consent:false, answers:{}, step:0, sending:false, under40:false,
+    id: (window.crypto && crypto.randomUUID) ? crypto.randomUUID() : ("r-" + Date.now().toString(36) + "-" + Math.random().toString(36).slice(2,10)) };
+  const app = document.getElementById("app");
+  const tr = key => (UI[key] && UI[key][state.lang || "en"]) || key;
+  const esc = s => String(s).replace(/[&<>"']/g, c => ({"&":"&amp;","<":"&lt;",">":"&gt;","\"":"&quot;","'":"&#39;"}[c]));
+  const tick = '<svg viewBox="0 0 16 16" aria-hidden="true"><path d="M3.5 8.5l3 3 6-7" fill="none" stroke="#fff" stroke-width="2.4" stroke-linecap="round" stroke-linejoin="round"/></svg>';
+  const icoBack = '<svg viewBox="0 0 24 24" aria-hidden="true"><path d="M15 5l-7 7 7 7" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round"/></svg>';
+
+  function bloom(x,y,size,c1,c2,rot,soft){
+    const petals=[0,72,144,216,288].map(a=>'<ellipse cx="50" cy="26" rx="17" ry="27" fill="'+c1+'" transform="rotate('+(a+rot)+' 50 50)"/>').join("");
+    return '<svg class="bloom'+(soft?' soft':'')+'" style="left:'+x+'%;top:'+y+'%;width:'+size+'px;height:'+size+'px" viewBox="0 0 100 100" aria-hidden="true">'+petals+'<circle cx="50" cy="50" r="9" fill="'+c2+'"/></svg>';
+  }
+  function blooms(){
+    return bloom(-18,-6,260,"#F06A9E","#B8235F",10,true)+bloom(55,-10,220,"#FFB3CF","#E0477F",30,false)+
+           bloom(62,48,300,"#E2457E","#9E1B52",0,true)+bloom(-10,58,240,"#FF9EC3","#D23A75",45,false)+
+           bloom(30,78,200,"#F7B7CF","#E05A8C",20,true);
+  }
+
+  function isVisible(step){
+    const a = state.answers;
+    if (["q5_what_happens","q6_most_trouble","q7_actions"].includes(step)) return !!a.q4_frequency && a.q4_frequency !== "never";
+    if (step === "q8_helps") return isVisible("q7_actions") && Array.isArray(a.q7_actions) && a.q7_actions.some(c => c !== "nothing");
+    return true;
+  }
+  const visibleSteps = () => STEPS.filter(isVisible);
+
+  function optionsFor(q){
+    if (q.derivedFrom){
+      const picked = state.answers[q.derivedFrom] || [];
+      const src = Q[q.derivedFrom].options.filter(o => picked.includes(o.code));
+      return src.concat(q.options);
+    }
+    return q.options;
+  }
+
+  function answered(id){
+    const q = Q[id], v = state.answers[id];
+    if (q.type === "multi") return Array.isArray(v) && v.length > 0;
+    if (q.type === "text") return true;
+    return !!v;
+  }
+  function canProceed(step){
+    if (step === "q9") return answered("q9a_sleepwear");
+    const q = Q[step];
+    return !q.required || answered(step);
+  }
+
+  /* ---------- Screens ---------- */
+  function render(){
+    document.body.setAttribute("data-lang", state.lang || "en");
+    document.documentElement.setAttribute("lang", state.lang || "en");
+    const s = state.screen;
+    let html = "";
+    if (s === "lang") html = viewLang();
+    else if (s === "welcome") html = viewWelcome();
+    else if (s === "q") html = viewQuestion();
+    else if (s === "saving") html = viewSaving();
+    else if (s === "done") html = viewEnd(false);
+    else if (s === "u40") html = viewEnd(true);
+    else if (s === "error") html = viewError();
+    app.innerHTML = banner() + html;
+    const h = app.querySelector("[data-focus]");
+    if (h) h.focus({preventScroll:true});
+    window.scrollTo(0,0);
+  }
+  function banner(){
+    if (!IN_APPS_SCRIPT) return '<div class="banner">' + esc(UI.previewNote[state.lang || "en"]) + '</div>';
+    if (TEST_MODE) return '<div class="banner">' + esc(UI.testNote[state.lang || "en"]) + '</div>';
+    return "";
+  }
+  function viewLang(){
+    const langs = [["en","English"],["hi","हिन्दी"],["bn","বাংলা"]];
+    return '<section class="stage lang-screen">' + blooms() + '<div class="inner">' +
+      '<h1 class="hero-title" tabindex="-1" data-focus>Beyond the Hot Flash 🌙</h1>' +
+      '<p class="lang-label">Choose your language · अपनी भाषा चुनें · আপনার ভাষা বেছে নিন</p>' +
+      '<div class="lang-list">' + langs.map(([c,l]) => '<button class="lang-btn" data-act="lang" data-v="'+c+'"><span class="'+c+'">'+l+'</span></button>').join("") + '</div>' +
+      '</div></section>';
+  }
+  function viewWelcome(){
+    return '<section class="stage welcome-top">' + blooms() + '<div class="inner">' +
+        '<h1 class="hero-title" tabindex="-1" data-focus>' + esc(tr("appTitle")) + ' 🌙</h1>' +
+        '<p class="subtitle">' + esc(tr("subtitle")) + '</p></div></section>' +
+      '<div class="panel">' +
+        '<p>' + esc(tr("welcomeBody")) + '</p>' +
+        '<p class="note">' + esc(tr("storageNote")) + '</p>' +
+        '<button class="consent" role="checkbox" aria-checked="' + state.consent + '" data-act="consent"><span class="tick square">' + tick + '</span><span>' + esc(tr("consent")) + '</span></button>' +
+        '<button class="btn" data-act="start"' + (state.consent ? "" : " disabled") + '>' + esc(tr("start")) + '</button>' +
+        '<p style="text-align:center;margin:12px 0 0"><button class="link" data-act="changelang">' + esc(tr("changeLang")) + '</button></p>' +
+      '</div>';
+  }
+  function optionButtons(q){
+    const v = state.answers[q.id];
+    const multi = q.type === "multi";
+    return '<div class="opts" role="' + (multi ? "group" : "radiogroup") + '" aria-label="' + esc(q.text[state.lang]) + '">' +
+      optionsFor(q).map(o => {
+        const on = multi ? (Array.isArray(v) && v.includes(o.code)) : v === o.code;
+        return '<button class="opt" role="' + (multi ? "checkbox" : "radio") + '" aria-checked="' + on + '" data-act="pick" data-q="' + q.id + '" data-v="' + o.code + '"><span>' + esc(o[state.lang]) + '</span><span class="tick' + (multi ? " square" : "") + '">' + tick + '</span></button>';
+      }).join("") + '</div>';
+  }
+  function viewQuestion(){
+    const steps = visibleSteps();
+    if (state.step >= steps.length) state.step = steps.length - 1;
+    const step = steps[state.step];
+    const n = state.step + 1, total = steps.length;
+    const pct = Math.round(n / total * 100);
+    const main = step === "q9" ? Q.q9a_sleepwear : Q[step];
+    let body = '<p class="sec">' + esc(tr(main.sec)) + '</p>' +
+      '<h2 class="qtext" tabindex="-1" data-focus>' + esc(main.text[state.lang]) + '</h2>';
+    if (main.type === "text"){
+      body += '<p class="hint">' + esc(tr("optional")) + '</p>' +
+        '<label class="sr" for="open">' + esc(main.text[state.lang]) + '</label>' +
+        '<textarea id="open" maxlength="1000" placeholder="' + esc(tr("typeHere")) + '" data-act="text" data-q="' + main.id + '">' + esc(state.answers[main.id] || "") + '</textarea>';
+    } else {
+      body += '<p class="hint">' + esc(main.type === "multi" ? tr("pickAll") : tr("pickOne")) + '</p>' + optionButtons(main);
+      if (main.otherText && state.answers[main.id] === "other"){
+        body += '<label class="sr" for="other">' + esc(tr("typeHere")) + '</label>' +
+          '<textarea id="other" class="othertext" maxlength="500" placeholder="' + esc(tr("typeHere")) + '" data-act="text" data-q="' + main.otherText + '">' + esc(state.answers[main.otherText] || "") + '</textarea>';
+      }
+    }
+    if (step === "q9"){
+      const sq = Q.q9b_fabric;
+      body += '<div class="sub"><p class="subq">' + esc(sq.text[state.lang]) + '</p><p class="hint">' + esc(tr("optional")) + '</p>' + optionButtons(sq) + '</div>';
+    }
+    const last = n === total;
+    return '<header class="qhead"><div class="bar">' +
+        '<button class="iconbtn" data-act="back" aria-label="' + esc(tr("back")) + '">' + icoBack + '</button>' +
+        '<p class="apptitle">' + esc(tr("appTitle")) + '</p></div>' +
+        '<div class="progress"><div class="track" role="progressbar" aria-valuemin="0" aria-valuemax="' + total + '" aria-valuenow="' + n + '"><div class="fill" style="width:' + pct + '%"></div></div><span class="count">' + n + '/' + total + '</span></div>' +
+      '</header>' +
+      '<main class="qcard">' + body + '</main>' +
+      '<div class="foot"><button class="btn" data-act="' + (last ? "submit" : "next") + '"' + (canProceed(step) ? "" : " disabled") + '>' + esc(last ? tr("submit") : tr("next")) + '</button></div>';
+  }
+  function viewSaving(){
+    return '<section class="stage end">' + blooms() + '<div class="inner saving"><div class="spinner"></div><p tabindex="-1" data-focus>' + esc(tr("saving")) + '</p></div></section>';
+  }
+  function medal(){
+    return '<svg class="medal" viewBox="0 0 120 120" aria-hidden="true"><circle cx="60" cy="60" r="54" fill="#FDE6EF"/>' +
+      [0,72,144,216,288].map(a => '<ellipse cx="60" cy="34" rx="15" ry="24" fill="#F48DB5" transform="rotate(' + a + ' 60 60)"/>').join("") +
+      [36,108,180,252,324].map(a => '<ellipse cx="60" cy="40" rx="9" ry="16" fill="#EC3D86" transform="rotate(' + a + ' 60 60)"/>').join("") +
+      '<circle cx="60" cy="60" r="11" fill="#FFD166"/><circle cx="24" cy="26" r="3" fill="#F48DB5"/><circle cx="98" cy="30" r="2.5" fill="#EC3D86"/><circle cx="100" cy="92" r="3" fill="#FFD166"/></svg>';
+  }
+  function viewEnd(u40){
+    return '<section class="stage end">' + blooms() + '<div class="inner endcard">' + medal() +
+      '<span class="ribbon">' + esc(tr("thanksRibbon")) + ' 🌸</span>' +
+      '<h1 class="endtitle" tabindex="-1" data-focus>' + esc(tr(u40 ? "u40Title" : "thanksTitle")) + '</h1>' +
+      '<p class="endbody">' + esc(tr(u40 ? "u40Body" : "thanksBody")) + '</p></div></section>';
+  }
+  function viewError(){
+    return '<section class="stage end">' + blooms() + '<div class="inner endcard">' +
+      '<h1 class="endtitle" tabindex="-1" data-focus>' + esc(tr("errorTitle")) + '</h1>' +
+      '<p class="endbody" style="margin-bottom:18px">' + esc(tr("errorBody")) + '</p>' +
+      '<button class="btn" data-act="retry">' + esc(tr("retry")) + '</button></div></section>';
+  }
+
+  /* ---------- Actions ---------- */
+  function pick(qid, code){
+    const q = Q[qid];
+    if (q.type === "multi"){
+      let cur = Array.isArray(state.answers[qid]) ? state.answers[qid].slice() : [];
+      const excl = q.exclusive || [];
+      if (cur.includes(code)) cur = cur.filter(c => c !== code);
+      else if (excl.includes(code)) cur = [code];
+      else cur = cur.filter(c => !excl.includes(c)).concat(code);
+      state.answers[qid] = cur;
+      if (qid === "q5_what_happens"){
+        const m = state.answers.q6_most_trouble;
+        if (m && m !== "nothing" && !cur.includes(m)) delete state.answers.q6_most_trouble;
+      }
+    } else {
+      state.answers[qid] = (state.answers[qid] === code && !q.required) ? undefined : code;
+    }
+    const y = window.scrollY;
+    render();
+    window.scrollTo(0, y);
+    const again = app.querySelector('[data-act="pick"][data-q="' + qid + '"][data-v="' + code + '"]');
+    if (again) again.focus({preventScroll:true});
+  }
+
+  function buildPayload(){
+    const p = { response_id: state.id, language: state.lang, survey_version: SURVEY.version, consent: "yes", test_flag: TEST_MODE ? "TEST" : "" };
+    const fields = QS.map(q => q.id);
+    fields.forEach(id => {
+      let stepId = (id === "q9a_sleepwear" || id === "q9b_fabric") ? "q9" : id;
+      let shown = !state.under40 ? isVisible(stepId) : id === "q1_age";
+      if (!shown){ p[id] = "NA"; if (Q[id].otherText) p[Q[id].otherText] = "NA"; return; }
+      const v = state.answers[id];
+      if (Array.isArray(v)) p[id] = v.join(";");
+      else p[id] = (v === undefined || v === null) ? "" : String(v).trim();
+      if (Q[id].otherText){
+        const k = Q[id].otherText;
+        p[k] = (!shown || v !== "other") ? "NA" : String(state.answers[k] || "").trim();
+      }
+    });
+    return p;
+  }
+
+  function send(){
+    if (state.sending) return;
+    state.sending = true;
+    const payload = buildPayload();
+    state.screen = "saving"; render();
+    const ok = () => { state.sending = false; state.screen = state.under40 ? "u40" : "done"; render(); };
+    const fail = () => { state.sending = false; state.screen = "error"; render(); };
+    if (IN_APPS_SCRIPT){
+      // text/plain keeps this a "simple" request, so the browser sends it without a CORS pre-check.
+      fetch(ENDPOINT, { method: "POST", headers: { "Content-Type": "text/plain;charset=utf-8" }, body: JSON.stringify(payload), redirect: "follow" })
+        .then(r => r.json())
+        .then(r => (r && r.ok) ? ok() : fail())
+        .catch(fail);
+    } else {
+      console.log("Preview payload (not saved):", payload);
+      window.__lastPayload = payload;
+      setTimeout(ok, 700);
+    }
+  }
+
+  app.addEventListener("click", e => {
+    const el = e.target.closest("[data-act]");
+    if (!el || el.disabled) return;
+    const act = el.getAttribute("data-act");
+    if (act === "lang"){ state.lang = el.getAttribute("data-v"); state.screen = "welcome"; render(); }
+    else if (act === "changelang"){ state.screen = "lang"; render(); }
+    else if (act === "consent"){ state.consent = !state.consent; render(); }
+    else if (act === "start"){ if (state.consent){ state.screen = "q"; state.step = 0; render(); } }
+    else if (act === "pick"){ pick(el.getAttribute("data-q"), el.getAttribute("data-v")); }
+    else if (act === "back"){ if (state.step > 0){ state.step--; render(); } else { state.screen = "welcome"; render(); } }
+    else if (act === "next"){
+      const step = visibleSteps()[state.step];
+      if (!canProceed(step)) return;
+      if (step === "q1_age" && state.answers.q1_age === "u40"){ state.under40 = true; send(); return; }
+      state.under40 = false;
+      state.step++; render();
+    }
+    else if (act === "submit"){ send(); }
+    else if (act === "retry"){ send(); }
+  });
+  app.addEventListener("input", e => {
+    const el = e.target;
+    if (el.getAttribute("data-act") === "text") state.answers[el.getAttribute("data-q")] = el.value;
+  });
+  render();
+})();
+</script>
+</body>
+</html>
